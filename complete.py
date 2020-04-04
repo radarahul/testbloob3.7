@@ -4,7 +4,7 @@ from tkinter.ttk import *
 from tkinter.filedialog import askopenfile
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 import zlib, base64
-#import kwargs as kwargs
+
 
 root = Tk()
 root.geometry('700x600')
@@ -17,9 +17,9 @@ def upload_file():
     # bloob code
     try:
         print("Azure Blob storage v12 - Python quickstart sample")
-        # Quick start code goes here
+        #Quick start code goes here
         #connect_str = os.getenv('AZURE_STORAGE_CONNECTION_STRING', )
-        # connect_str = "q5DQyUf07SfLJjEAnpI2zmd/TisHnydJQs6x8Ba4DMYh/kDmx3qnFX/8OQC4dq0XeIdyiVP5AwsVSioqBFKNKg=="
+        #connect_str = "q5DQyUf07SfLJjEAnpI2zmd/TisHnydJQs6x8Ba4DMYh/kDmx3qnFX/8OQC4dq0XeIdyiVP5AwsVSioqBFKNKg=="
 
         print(connect_str)
 
