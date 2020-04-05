@@ -4,6 +4,7 @@ from tkinter.ttk import *
 from tkinter.filedialog import askopenfile
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 import zlib, base64
+import datetime
 
 
 root = Tk()
@@ -11,6 +12,13 @@ root.geometry('700x600')
 dir_= ""
 name_= ""
 connect_str = "DefaultEndpointsProtocol=https;AccountName=mystorageaccountname123;AccountKey=q5DQyUf07SfLJjEAnpI2zmd/TisHnydJQs6x8Ba4DMYh/kDmx3qnFX/8OQC4dq0XeIdyiVP5AwsVSioqBFKNKg==;EndpointSuffix=core.windows.net"
+container_name = "mycontainer123"
+blob_service_client = BlobServiceClient.from_connection_string(connect_str)
+container_client = blob_service_client.get_container_client("mycontainer123")
+#blob_client = blob_service_client.get_blob_client(container=container_name, blob=file_to_decompress)
+string = datetime.datetime.now()
+date = str(string).replace(" ", "_")
+
 
 
 def upload_file():
@@ -24,9 +32,9 @@ def upload_file():
         print(connect_str)
 
         # Create the BlobServiceClient object which will be used to create a container client
-        global blob_service_client
-        blob_service_client = BlobServiceClient.from_connection_string(connect_str)
-        container_name = "mycontainer123"
+        #global blob_service_client
+        #blob_service_client = BlobServiceClient.from_connection_string(connect_str)
+        #container_name = "mycontainer123"
 
         # Create a file in local data directory to upload and download
         local_path = label_d["text"]
@@ -54,7 +62,7 @@ def upload_file():
         print('Exception:')
         print(ex)
 
-    root.destroy()
+
 
 
 
@@ -93,8 +101,9 @@ def compress(name_, dir_):
     # encoding the text
     code = base64.b64encode(zlib.compress(text.encode('utf-8'), 9))
     code = code.decode('utf-8')
-    var_c="%s/compress_2.txt"%(dir_)
-    label_n["text"] = "compress_2.txt"
+    var_c="%s/%s"%(dir_,name_)
+    #var_c = dir_ + ""
+    label_n["text"] = "%s"%(name_)
     f = open(var_c, 'w')
     f.write(code)
     f.close()
@@ -108,10 +117,10 @@ def extract_file():
 class option_menu(Tk):
 
     def __init__(self, parent):
-        Tk.__init__(self, parent)
-        self.parent = parent
+        #Tk.__init__(self, parent)
+        #self.parent = parent
         self.initialize()
-        self.grid()
+        #self.pack()
 
     def initialize(self):
         frame = Frame(root)
@@ -120,8 +129,8 @@ class option_menu(Tk):
         tkvar.set('Select')
         choices = list()
         print("\nListing blobs...")
-        blob_service_client = BlobServiceClient.from_connection_string(connect_str)
-        container_client = blob_service_client.get_container_client("mycontainer123")
+        #blob_service_client = BlobServiceClient.from_connection_string(connect_str)
+        #container_client = blob_service_client.get_container_client("mycontainer123")
         # List the blobs in the container
         blob_list = container_client.list_blobs()
         for blob in blob_list:
@@ -139,10 +148,11 @@ class option_menu(Tk):
 def decompress(file_to_decompress):
     # Download the blob to a local file
     # Add 'DOWNLOAD' before the .txt extension so you can see both files in the data directory
-    local_path = "C:/Users/admin/Desktop/Decompressed/download.txt"
-    blob_service_client = BlobServiceClient.from_connection_string(connect_str)
-    download_file_path = local_path
-    container_name = "mycontainer123"
+    #local_path = "C:/Users/admin/Desktop/Decompressed/download.txt"
+
+    #blob_service_client = BlobServiceClient.from_connection_string(connect_str)
+    download_file_path = "C:/Decompressed/Downloads/" + file_to_decompress + "_" + date + "_downloaded.txt"
+    #container_name = "mycontainer123"
     blob_client = blob_service_client.get_blob_client(container=container_name, blob=file_to_decompress)
     print("\nDownloading blob to \n\t" + download_file_path)
 
@@ -157,13 +167,15 @@ def decompress(file_to_decompress):
     file.close()
     # decode the encoded text
     decoded_txt = zlib.decompress(base64.b64decode(text))
-    decompress_path = "C:/Users/admin/Desktop/Decompressed/decompressed.txt"
+    decompress_path = "C:/Decompressed/"
+    decompress_file = file_to_decompress + "_" + date + "_decompressed.txt"
 
     f = open(decompress_path, 'wb')
     f.write(decoded_txt)
     f.close()
 
     print("File decompressed and placed in the folder....")
+    root.destroy()
 
 label_n = Label(root, text="")
 label_d = Label(root, text="")
